@@ -2,6 +2,7 @@ import os
 from sqlalchemy import Column, String, Integer
 from flask_sqlalchemy import SQLAlchemy
 import json
+import sys
 
 database_filename = "database.db"
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +42,7 @@ def db_drop_and_create_all():
 
 
     drink.insert()
+    db.session.commit()
 # ROUTES
 
 '''
