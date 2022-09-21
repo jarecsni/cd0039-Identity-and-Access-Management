@@ -7,9 +7,11 @@ from urllib.request import urlopen
 
 app = Flask(__name__)
 
-AUTH0_DOMAIN = @TODO_REPLACE_WITH_YOUR_DOMAIN
+AUTH0_DOMAIN = 'dev-dh95ttcd.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = @TODO_REPLACE_WITH_YOUR_API_AUDIENCE
+
+# https://dev-dh95ttcd.us.auth0.com/authorize?audience=TestAPI&response_type=token&client_id=RTuTbXBWAPQY7afmILOjQNaFOsaIrbeJ&redirect_uri=https://localhost:5000/login-results
 
 
 class AuthError(Exception):

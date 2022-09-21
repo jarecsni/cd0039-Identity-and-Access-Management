@@ -8,6 +8,7 @@ greetings = {
             'en': 'hello', 
             'es': 'Hola', 
             'ar': 'مرحبا',
+            'hu': 'Jónapot',
             'ru': 'Привет',
             'fi': 'Hei',
             'he': 'שלום',
