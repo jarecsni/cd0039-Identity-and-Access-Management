@@ -14,6 +14,7 @@ export class AuthService {
   audience = environment.auth0.audience;
   clientId = environment.auth0.clientId;
   callbackURL = environment.auth0.callbackURL;
+  logoutCallBackUrl = 'http://localhost:8100/';
 
   token: string;
   payload: any;
@@ -30,6 +31,16 @@ export class AuthService {
     link += 'redirect_uri=' + this.callbackURL + callbackPath;
     return link;
   }
+
+  build_logout_link() {
+    let link = 'https://';
+    link += this.url + '.auth0.com';
+    link += '/v2/logout?';
+    link += 'client_id=' + this.clientId + '&'; 
+    link += 'redirect_uri=' + encodeURIComponent(this.logoutCallBackUrl);
+    return link;
+  }
+
 
   // invoked in app.component on load
   check_token_fragment() {
@@ -69,6 +80,7 @@ export class AuthService {
   }
 
   logout() {
+    'https://YOUR_DOMAIN/v2/logout?returnTo=http%3A%2F%2Fwww.example.com'
     this.token = '';
     this.payload = null;
     this.set_jwt();
