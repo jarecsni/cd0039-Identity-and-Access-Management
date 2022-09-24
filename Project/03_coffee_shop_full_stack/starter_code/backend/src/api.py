@@ -34,6 +34,7 @@ def drinks():
             'drinks': [drink.short() for drink in drinks]
         }), 200
     except Exception as exc:
+        print(exc)
         abort(exc.code if hasattr(exc, 'code') else 500)
 
 
