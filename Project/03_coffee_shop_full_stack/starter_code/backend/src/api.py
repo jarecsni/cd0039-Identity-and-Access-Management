@@ -68,6 +68,7 @@ def drinks_detail():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
 def create_drink():
     try:
         post_data = request.get_json()
@@ -85,8 +86,9 @@ def create_drink():
             'drinks': [drink.long()]
         }), 200
     except Exception as exc:
-        abort(exc.code if hasattr(exc, 'code') else 500)
-
+        #abort(exc.code if hasattr(exc, 'code') else 500)
+        print('******** raising 500')
+        abort(500)
 
 '''
 TODO implement endpoint
@@ -100,7 +102,8 @@ TODO implement endpoint
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<int:id>', methods=['PATCH'])
-def update_drink(id):
+@requires_auth('patch:drinks')
+def update_drink(jwt, id):
     try:
         drink = Drink.query.get(id)
         if drink is None:
@@ -130,7 +133,8 @@ TODO implement endpoint
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
-def delete_drink(id):
+@requires_auth('delete:drinks')
+def delete_drink(jwt, id):
     drink = Drink.query.get(id)
     try:
         if drink is None:
@@ -170,9 +174,15 @@ TODO implement error handler for AuthError
 @app.errorhandler(404)
 @app.errorhandler(422)
 @app.errorhandler(500)
-def handle_error(error):
+def handle_error(_error):
+    if (isinstance(_error, AuthError)):
+        code = _error.error['code']
+        description = _error.error['description']
+    else:
+        code = 500
+        description = repr(_error)
     return jsonify({
         "success": False,
-        "error": error.code,
-        "message": error.description
-    }), error.code
+        "error": code,
+        "message": description
+    }), code
