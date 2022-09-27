@@ -1,14 +1,13 @@
-import json
 from flask import request
 from functools import wraps
 from jose import jwt, ExpiredSignatureError
+import json
 from urllib.request import urlopen
 
-AUTH0_DOMAIN = 'dev-dh95ttcd.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'CoffeeShop'
+AUTH0_DOMAIN = 'dev-dh95ttcd.us.auth0.com'
 
-## AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
@@ -18,8 +17,6 @@ class AuthError(Exception):
         self.error = error
         self.status_code = status_code
 
-
-## Auth Header
 
 '''
 TODO implement get_token_auth_header() method
@@ -152,6 +149,5 @@ def requires_auth(permission=''):
             payload = verify_decode_jwt(token)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
-
         return wrapper
     return requires_auth_decorator
