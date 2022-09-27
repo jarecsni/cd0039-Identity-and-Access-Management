@@ -34,9 +34,7 @@ def drinks():
             'drinks': [drink.short() for drink in drinks]
         }), 200
     except Exception as exc:
-        print(exc)
-        abort(exc.code if hasattr(exc, 'code') else 500)
-
+        abort(exc.code if hasattr(exc, 'code') else 500, exc.description if hasattr(exc, 'description') else repr(exc))
 
 '''
 TODO implement endpoint
@@ -56,7 +54,7 @@ def drinks_detail():
             'drinks': [drink.long() for drink in drinks]
         }), 200    
     except Exception as exc:
-        abort(exc.code if hasattr(exc, 'code') else 500)
+        abort(exc.code if hasattr(exc, 'code') else 500, exc.description if hasattr(exc, 'description') else repr(exc))
 
 '''
 @TODO implement endpoint
@@ -68,16 +66,16 @@ def drinks_detail():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['POST'])
-@requires_auth('post:drinks')
+#@requires_auth('post:drinks')
 def create_drink():
     try:
         post_data = request.get_json()
-        
+
         if post_data.get('title', None) == None or post_data.get('recipe', None) == None:
             abort(422)
         
         title = post_data.get('title')
-        recipe = json.dumps(post_data.get('recipe'))
+        recipe = json.dumps([post_data.get('recipe')])
         drink = Drink(title=title, recipe=recipe)
         drink.insert()
 
@@ -86,10 +84,8 @@ def create_drink():
             'drinks': [drink.long()]
         }), 200
     except Exception as exc:
-        #abort(exc.code if hasattr(exc, 'code') else 500)
-        print('******** raising 500')
-        abort(500)
-
+        abort(exc.code if hasattr(exc, 'code') else 500, exc.description if hasattr(exc, 'description') else repr(exc))
+        
 '''
 TODO implement endpoint
     PATCH /drinks/<id>
@@ -119,7 +115,7 @@ def update_drink(jwt, id):
             'drinks': [drink.long()]
         }), 200
     except Exception as exc:
-        abort(exc.code if hasattr(exc, 'code') else 500)
+        abort(exc.code if hasattr(exc, 'code') else 500, exc.description if hasattr(exc, 'description') else repr(exc))
 
 
 '''
@@ -145,8 +141,7 @@ def delete_drink(jwt, id):
             'delete': drink.id
         }), 200
     except Exception as exc:
-        abort(exc.code if hasattr(exc, 'code') else 500)
-
+        abort(exc.code if hasattr(exc, 'code') else 500, exc.description if hasattr(exc, 'description') else repr(exc))
 
 # Error Handling
 '''
@@ -174,13 +169,14 @@ TODO implement error handler for AuthError
 @app.errorhandler(404)
 @app.errorhandler(422)
 @app.errorhandler(500)
+@app.errorhandler(501)
 def handle_error(_error):
     if (isinstance(_error, AuthError)):
         code = _error.error['code']
         description = _error.error['description']
     else:
-        code = 500
-        description = repr(_error)
+        code = _error.code if hasattr(_error, 'code') else 500
+        description = _error.description if hasattr(_error, 'description') else repr(_error)
     return jsonify({
         "success": False,
         "error": code,
