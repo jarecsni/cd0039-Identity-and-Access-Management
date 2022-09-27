@@ -171,7 +171,7 @@ TODO implement error handler for AuthError
 @app.errorhandler(404)
 @app.errorhandler(422)
 @app.errorhandler(500)
-@app.errorhandler(501)
+@app.errorhandler(AuthError)
 def handle_error(_error):
     if (isinstance(_error, AuthError)):
         code = _error.error['code']

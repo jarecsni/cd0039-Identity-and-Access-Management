@@ -122,5 +122,4 @@ def requires_auth(f):
 @app.route('/headers')
 @requires_auth
 def headers(payload):
-    print(payload)
     return 'Access Granted'

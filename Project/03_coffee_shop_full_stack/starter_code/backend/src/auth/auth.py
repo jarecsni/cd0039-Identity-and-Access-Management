@@ -1,12 +1,8 @@
 import json
-from flask import request, _request_ctx_stack
+from flask import request
 from functools import wraps
 from jose import jwt, ExpiredSignatureError
 from urllib.request import urlopen
-
-#from werkzeug.local import LocalProxy
-#current_user = LocalProxy(lambda: _request_ctx_stack.top.current_user)
-
 
 AUTH0_DOMAIN = 'dev-dh95ttcd.us.auth0.com'
 ALGORITHMS = ['RS256']
@@ -137,13 +133,9 @@ def verify_decode_jwt(token):
         'description': 'Unauthorised - no key'
     }, 401)
 
-    #_request_ctx_stack.top.current_user = payload
-    
-    #return verify_decode_jwt(token)
-
 
 '''
-@TODO implement @requires_auth(permission) decorator method
+TODO implement @requires_auth(permission) decorator method
     @INPUTS
         permission: string permission (i.e. 'post:drink')
 
