@@ -45,7 +45,8 @@ TODO implement endpoint
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks-detail', methods=['GET'])
-def drinks_detail():
+@requires_auth('get:drinks-detail')
+def drinks_detail(jwt):
     try:
         drinks = Drink.query.order_by(Drink.id).all()
 
@@ -66,8 +67,8 @@ def drinks_detail():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['POST'])
-#@requires_auth('post:drinks')
-def create_drink():
+@requires_auth('post:drinks')
+def create_drink(jwt):
     try:
         post_data = request.get_json()
 
@@ -75,7 +76,8 @@ def create_drink():
             abort(422)
         
         title = post_data.get('title')
-        recipe = json.dumps([post_data.get('recipe')])
+        recipe = post_data.get('recipe')
+        recipe = json.dumps(recipe) if isinstance(recipe, list) else json.dumps([recipe])
         drink = Drink(title=title, recipe=recipe)
         drink.insert()
 
