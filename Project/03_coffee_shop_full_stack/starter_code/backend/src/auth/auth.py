@@ -131,10 +131,15 @@ def verify_decode_jwt(token):
                 'code': '401',
                 'description': 'Unauthorised'
             }, 401)
-       
+
+    raise AuthError({
+        'code': '401',
+        'description': 'Unauthorised - no key'
+    }, 401)
+
     #_request_ctx_stack.top.current_user = payload
     
-    return verify_decode_jwt(token)
+    #return verify_decode_jwt(token)
 
 
 '''
